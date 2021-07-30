@@ -23,7 +23,7 @@ export default function Home(): ReactElement {
       period: 'Ao dia',
       price: 120,
     },
-    thumbnail: 'https://img2.gratispng.com/20180618/hwg/kisspng-2015-audi-a6-2016-audi-a6-2018-audi-a6-audi-s6-2016-audi-a6-30t-premium-plus-5b27746431f124.5210989915293123562046.jpg'
+    thumbnail: 'https://toppng.com/uploads/preview/car-115450452480adfbyu2mv.png'
   };
 
 
