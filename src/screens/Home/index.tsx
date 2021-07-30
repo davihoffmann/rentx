@@ -11,7 +11,8 @@ import {
    Container, 
    Header,
    HeaderContent,
-   TotalCards
+   TotalCards,
+   CarList
 } from './styles';
  
 export default function Home(): ReactElement {
@@ -23,17 +24,8 @@ export default function Home(): ReactElement {
       price: 120,
     },
     thumbnail: 'https://img2.gratispng.com/20180618/hwg/kisspng-2015-audi-a6-2016-audi-a6-2018-audi-a6-audi-s6-2016-audi-a6-30t-premium-plus-5b27746431f124.5210989915293123562046.jpg'
-  }
+  };
 
-  const carData2 = {
-    brand: 'Porche',
-    name: 'Panamera',
-    rent: {
-      period: 'Ao dia',
-      price: 340,
-    },
-    thumbnail: 'https://img2.gratispng.com/20180618/bzc/kisspng-mid-size-car-porsche-panamera-4-e-hybrid-sport-tur-2018-porsche-panamera-5b2814804a5f90.7485803615293533443046.jpg'
-  }
 
   return (
     <Container>
@@ -49,8 +41,13 @@ export default function Home(): ReactElement {
           <TotalCards>Total de 12 carros</TotalCards>
         </HeaderContent>
       </Header>
-      <Car data={carData} />
-      <Car data={carData2} />
+
+      <CarList 
+        data={[1, 2, 3]} 
+        keyExtractor={item => String(item)}
+        renderItem={({ item }) => (<Car data={carData} />)}
+      />
+      
     </Container>
   );
 }
