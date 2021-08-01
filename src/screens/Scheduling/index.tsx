@@ -3,6 +3,7 @@ import { StatusBar } from 'react-native';
 import { useTheme } from 'styled-components';
 
 import BackButton from '../../components/BackButton';
+import Calendar from '../../components/Calendar';
 import Button from '../../components/Button';
 
 import ArrowSvg from '../../assets/arrow.svg'
@@ -54,7 +55,7 @@ export default function Scheduling(): ReactElement {
       </Header>
 
       <Content>
-
+        <Calendar />
       </Content>
 
       <Footer>
