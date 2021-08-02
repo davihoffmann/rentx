@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigation, CommonActions } from '@react-navigation/native';
 
 import BackButton from '../../components/BackButton';
 import ImageSlider from '../../components/ImageSlider';
@@ -30,10 +31,18 @@ import {
 } from './styles';
 
 export default function CarDetails() {
+  const navigation = useNavigation();
+
+  function handleConfirmRental() {
+    navigation.dispatch(
+      CommonActions.navigate('Scheduling')
+    );
+  }
+
   return (
     <Container>
       <Header>
-        <BackButton onPress={() => {}} />
+        <BackButton onPress={() => navigation.goBack()} />
       </Header>
 
       <CarImages>
@@ -71,7 +80,7 @@ export default function CarDetails() {
         </About>
       </Content>
       <Footer>
-        <Button title="Confirmar" />
+        <Button title="Escolher período do aluguel" onPress={handleConfirmRental} />
       </Footer>
     </Container>
   )
