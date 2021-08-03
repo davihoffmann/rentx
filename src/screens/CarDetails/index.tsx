@@ -6,12 +6,7 @@ import ImageSlider from '../../components/ImageSlider';
 import Accessory from '../../components/Accessory';
 import Button from '../../components/Button';
 
-import SpeedSvg from '../../assets/speed.svg';
-import AccelerationSvg from '../../assets/acceleration.svg';
-import ForceSvg from '../../assets/force.svg';
-import GasolineSvg from '../../assets/gasoline.svg';
-import ExchangeSvg from '../../assets/exchange.svg';
-import PeopleSvg from '../../assets/people.svg';
+import { getAcessoryIcon } from '../../utils/getAccessoryIcon';
 
 import {
   Container,
@@ -40,14 +35,6 @@ export default function CarDetails() {
   const route = useRoute();
   const { car } = route.params as Params;
 
-  // const acessoriesType = {
-  //   'speed': SpeedSvg,
-  //   'acceleration': AccelerationSvg,
-  //   'force': ForceSvg,
-  //   'gasoline': GasolineSvg,
-  //   'exchange': ExchangeSvg,
-  //   'people':  PeopleSvg,
-  // };
 
   function handleConfirmRental() {
     navigation.dispatch(
@@ -83,7 +70,7 @@ export default function CarDetails() {
         <Accessories>
           {
             car.accessories.map(accessory => (
-              <Accessory key={accessory.type} name={accessory.name} icon={SpeedSvg} />
+              <Accessory key={accessory.type} name={accessory.name} icon={getAcessoryIcon(accessory.type)} />
             ))
           }
         </Accessories>
