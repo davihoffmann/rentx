@@ -6,17 +6,15 @@ import {
   LocaleConfig
 } from 'react-native-calendars';
 
-LocaleConfig.locales['pt-br'] = {
-  monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-  monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-  dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
-  dayNamesShort: ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'],
-  today: 'Hoje'
-}
+import { ptBr } from './localeConfig';
+import { CalendarProps } from './types';
+
+LocaleConfig.locales['pt-br'] = ptBr;
 LocaleConfig.defaultLocale = 'pt-br';
 
-export default function Calendar(): ReactElement {
+export default function Calendar({ markedDates, onDayPress }: CalendarProps): ReactElement {
   const theme = useTheme();
+  
   return (
     <CustomCalendar 
       renderArrow={(direction) => (
@@ -46,6 +44,9 @@ export default function Calendar(): ReactElement {
       }}
       firstDay={1}
       minDate={new Date()}
+      markingType="period"
+      markedDates={markedDates}
+      onDayPress={onDayPress}
     />
   );
 }
