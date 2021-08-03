@@ -1,10 +1,14 @@
 
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { StatusBar } from 'react-native';
 import { useNavigation, CommonActions } from '@react-navigation/native';
 import { RFValue } from 'react-native-responsive-fontsize';
 
 import Car from '../../components/Car';
+import Load from '../../components/Load';
+
+import api from '../../services/api';
+import { CarDTO } from '../../dtos/CarDTO';
 
 import Logo from '../../assets/logo.svg';
 
@@ -19,15 +23,23 @@ import {
 export default function Home(): ReactElement {
   const navigation = useNavigation();
 
-  const carData = {
-    brand: 'Audi',
-    name: 'RS 5 Coupé',
-    rent: {
-      period: 'Ao dia',
-      price: 120,
-    },
-    thumbnail: 'https://toppng.com/uploads/preview/car-115450452480adfbyu2mv.png'
-  };
+  const [cars, setCars] = useState<CarDTO[]>([]);
+  const [isLoading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchCars() {
+      try {
+        const result = await api.get('/cars');
+        setCars(result.data);
+      } catch(error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchCars();
+  }, []);
 
   function handleCarDetails() {
     navigation.dispatch(
@@ -44,20 +56,28 @@ export default function Home(): ReactElement {
         backgroundColor="transparent" 
         translucent
       />
-      <Header>
-        <HeaderContent>
-          <Logo width={RFValue(108)} height={RFValue(12)} />
 
-          <TotalCards>Total de 12 carros</TotalCards>
-        </HeaderContent>
-      </Header>
+      {
+        isLoading ? (
+          <Load />
+        ) : (
+          <>
+            <Header>
+              <HeaderContent>
+                <Logo width={RFValue(108)} height={RFValue(12)} />
 
-      <CarList 
-        data={[1, 2, 3]} 
-        keyExtractor={item => String(item)}
-        renderItem={({ item }) => (<Car onPress={handleCarDetails} data={carData} />)}
-      />
-      
+                <TotalCards>Total de 12 carros</TotalCards>
+              </HeaderContent>
+            </Header>
+
+            <CarList 
+              data={cars} 
+              keyExtractor={item => item.id}
+              renderItem={({ item }) => (<Car onPress={handleCarDetails} data={item} />)}
+            />
+          </>
+        )
+      }
     </Container>
   );
 }
