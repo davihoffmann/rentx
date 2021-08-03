@@ -41,10 +41,13 @@ export default function Home(): ReactElement {
     fetchCars();
   }, []);
 
-  function handleCarDetails() {
+  function handleCarDetails(car: CarDTO) {
     navigation.dispatch(
       CommonActions.navigate({
         name: 'CarDetails',
+        params: {
+          car
+        }
       })
     );
   }
@@ -73,7 +76,7 @@ export default function Home(): ReactElement {
             <CarList 
               data={cars} 
               keyExtractor={item => item.id}
-              renderItem={({ item }) => (<Car onPress={handleCarDetails} data={item} />)}
+              renderItem={({ item }) => (<Car onPress={() => handleCarDetails(item)} data={item} />)}
             />
           </>
         )

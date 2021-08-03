@@ -5,7 +5,7 @@ import { useTheme } from 'styled-components';
 
 import BackButton from '../../components/BackButton';
 import ImageSlider from '../../components/ImageSlider';
-import Acessory from '../../components/Acessory';
+import Acessory from '../../components/Accessory';
 import Button from '../../components/Button';
 
 import SpeedSvg from '../../assets/speed.svg';
