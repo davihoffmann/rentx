@@ -81,7 +81,7 @@ export default function Home(): ReactElement {
               <HeaderContent>
                 <Logo width={RFValue(108)} height={RFValue(12)} />
 
-                <TotalCards>Total de 12 carros</TotalCards>
+                <TotalCards>{`Total de ${cars.length} carros`}</TotalCards>
               </HeaderContent>
             </Header>
 
