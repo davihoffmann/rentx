@@ -1,13 +1,20 @@
-import React from 'react';
+import React, { ReactElement, useState, useEffect } from 'react';
+import { Alert, ActivityIndicator } from 'react-native';
 import { useNavigation, CommonActions, useRoute } from '@react-navigation/native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { Feather } from '@expo/vector-icons';
 import { useTheme } from 'styled-components';
+import { format } from 'date-fns';
+
+import api from '../../services/api';
 
 import BackButton from '../../components/BackButton';
 import ImageSlider from '../../components/ImageSlider';
 import Accessory from '../../components/Accessory';
 import Button from '../../components/Button';
+
+import { getAcessoryIcon } from '../../utils/getAccessoryIcon';
+import { getPlatformDate } from '../../utils/getPlatformDate';
 
 import { CarDTO } from '../../dtos/CarDTO';
 
@@ -36,22 +43,61 @@ import {
   RentalPriceTotal,
   Footer
 } from './styles';
-import { getAcessoryIcon } from '../../utils/getAccessoryIcon';
 
 interface Params {
   car: CarDTO;
+  dates: string[];
 }
 
-export default function SchedulingDetails() {
+interface RentalPeriod {
+  start: string;
+  end: string;
+}
+
+export default function SchedulingDetails(): ReactElement {
   const navigation = useNavigation();
   const theme = useTheme();
   const route = useRoute();
-  const { car } = route.params as Params;
+  const { car, dates } = route.params as Params;
 
-  function handleConfirm() {
-    navigation.dispatch(
-      CommonActions.navigate('SchedulingComplete')
-    );
+  const [isLoading, setIsLoading] = useState(false);
+  const [rentalPeriod, setRentalPeriod] = useState<RentalPeriod>({} as RentalPeriod);
+  const rentTotal = (Number(dates.length) * car.rent.price).toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  });
+
+  useEffect(() => {
+    setRentalPeriod({
+      start: format(getPlatformDate(new Date(dates[0])), 'dd/MM/yyyy'),
+      end: format(getPlatformDate(new Date(dates[dates.length - 1])), 'dd/MM/yyyy')
+    })
+  }, []);
+
+
+  async function handleConfirm() {
+    setIsLoading(true);
+    const schedulesByCar = await api.get(`/schedules_bycars/${car.id}`);
+
+    const unavailable_dates = [
+      ...schedulesByCar.data.unavailable_dates,
+      ...dates
+    ];
+
+    api.put(`/schedules_bycars/${car.id}`, {
+      id: car.id,
+      unavailable_dates
+    }).then(() => 
+      navigation.dispatch(
+        CommonActions.navigate('SchedulingComplete')
+      )
+    )
+    .catch(error => {
+      console.error(error);
+      Alert.alert('Não foi possível confirmar o agendamento.');
+    }).finally(() => {
+      setIsLoading(false);
+    })
   }
 
   return (
@@ -98,7 +144,7 @@ export default function SchedulingDetails() {
 
           <DateInfo>
             <DateTitle>DE</DateTitle>
-            <DateValue>01/08/2021</DateValue>
+            <DateValue>{rentalPeriod.start}</DateValue>
           </DateInfo>
 
           <Feather 
@@ -109,21 +155,25 @@ export default function SchedulingDetails() {
 
           <DateInfo>
             <DateTitle>ATÉ</DateTitle>
-            <DateValue>01/08/2021</DateValue>
+            <DateValue>{rentalPeriod.end}</DateValue>
           </DateInfo>
         </RentalPeriod>
       
         <RentalPrice>
           <RentalPriceLabel>TOTAL</RentalPriceLabel>
           <RentalPriceDetails>
-            <RentalPriceQuota>R$ 580 x3 diárias</RentalPriceQuota>
-            <RentalPriceTotal>R$ 2.900</RentalPriceTotal>
+            <RentalPriceQuota>{`R$ ${car.rent.price} x${dates.length} diárias`}</RentalPriceQuota>
+            <RentalPriceTotal>{rentTotal}</RentalPriceTotal>
           </RentalPriceDetails>
         </RentalPrice>
       </Content>
 
       <Footer>
-        <Button title="Alugar agora" color={theme.colors.success} onPress={handleConfirm} />
+        {
+          isLoading 
+          ? <ActivityIndicator />
+          : (<Button title="Alugar agora" color={theme.colors.success} onPress={handleConfirm} />)
+        }
       </Footer>
     </Container>
   )
