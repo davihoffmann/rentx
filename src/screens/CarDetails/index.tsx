@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { ReactElement } from 'react';
 import { useNavigation, CommonActions, useRoute } from '@react-navigation/native';
 
 import BackButton from '../../components/BackButton';
@@ -6,6 +6,7 @@ import ImageSlider from '../../components/ImageSlider';
 import Accessory from '../../components/Accessory';
 import Button from '../../components/Button';
 
+import { CarDTO } from '../../dtos/CarDTO';
 import { getAcessoryIcon } from '../../utils/getAccessoryIcon';
 
 import {
@@ -24,22 +25,22 @@ import {
   Accessories,
   Footer
 } from './styles';
-import { CarDTO } from '../../dtos/CarDTO';
 
 interface Params {
   car: CarDTO;
 }
 
-export default function CarDetails() {
+export default function CarDetails(): ReactElement {
   const navigation = useNavigation();
   const route = useRoute();
   const { car } = route.params as Params;
 
-
   function handleConfirmRental() {
     navigation.dispatch(
-      CommonActions.navigate('Scheduling')
-    );
+      CommonActions.navigate({ name: 'Scheduling', params: {
+        car
+      } 
+    }));
   }
 
   return (
