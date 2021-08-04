@@ -1,5 +1,5 @@
 import React, { ReactElement, useState, useEffect } from 'react';
-import { Alert, ActivityIndicator } from 'react-native';
+import { Alert } from 'react-native';
 import { useNavigation, CommonActions, useRoute } from '@react-navigation/native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { Feather } from '@expo/vector-icons';
@@ -100,9 +100,8 @@ export default function SchedulingDetails(): ReactElement {
     )
     .catch(error => {
       console.error(error);
-      Alert.alert('Não foi possível confirmar o agendamento.');
-    }).finally(() => {
       setIsLoading(false);
+      Alert.alert('Não foi possível confirmar o agendamento.');
     })
   }
 
@@ -175,11 +174,13 @@ export default function SchedulingDetails(): ReactElement {
       </Content>
 
       <Footer>
-        {
-          isLoading 
-          ? <ActivityIndicator />
-          : (<Button title="Alugar agora" color={theme.colors.success} onPress={handleConfirm} />)
-        }
+          <Button 
+            title="Alugar agora" 
+            color={theme.colors.success} 
+            onPress={handleConfirm}
+            enabled={!isLoading}
+            loading={isLoading}
+          />
       </Footer>
     </Container>
   )
