@@ -83,6 +83,13 @@ export default function SchedulingDetails(): ReactElement {
       ...dates
     ];
 
+    await api.post('/schedules_byuser', {
+      user_id: 1,
+      car,
+      startDate: format(getPlatformDate(new Date(dates[0])), 'dd/MM/yyyy'),
+      endDate: format(getPlatformDate(new Date(dates[dates.length - 1])), 'dd/MM/yyyy')
+    })
+
     api.put(`/schedules_bycars/${car.id}`, {
       id: car.id,
       unavailable_dates
