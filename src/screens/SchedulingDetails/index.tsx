@@ -74,7 +74,6 @@ export default function SchedulingDetails(): ReactElement {
     })
   }, []);
 
-
   async function handleConfirm() {
     setIsLoading(true);
     const schedulesByCar = await api.get(`/schedules_bycars/${car.id}`);
