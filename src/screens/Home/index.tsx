@@ -16,6 +16,7 @@ import Animated, {
 
 import Car from '../../components/Car';
 import Load from '../../components/Load';
+import LoadAnimation from '../../components/LoadAnimation';
 
 import api from '../../services/api';
 import { CarDTO } from '../../dtos/CarDTO';
@@ -127,7 +128,7 @@ export default function Home(): ReactElement {
 
       {
         isLoading ? (
-          <Load />
+          <LoadAnimation />
         ) : (
           <CarList 
             data={cars} 
