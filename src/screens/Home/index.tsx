@@ -1,6 +1,6 @@
 
 import React, { ReactElement, useEffect, useState } from 'react';
-import { StatusBar, StyleSheet } from 'react-native';
+import { StatusBar, StyleSheet, BackHandler } from 'react-native';
 import { useNavigation, CommonActions } from '@react-navigation/native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { Ionicons } from '@expo/vector-icons';
@@ -66,21 +66,6 @@ export default function Home(): ReactElement {
     }
   });
 
-  useEffect(() => {
-    async function fetchCars() {
-      try {
-        const result = await api.get('/cars');
-        setCars(result.data);
-      } catch(error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchCars();
-  }, []);
-
   function handleCarDetails(car: CarDTO) {
     navigation.dispatch(
       CommonActions.navigate({
@@ -100,6 +85,27 @@ export default function Home(): ReactElement {
     );
   }
 
+  useEffect(() => {
+    async function fetchCars() {
+      try {
+        const result = await api.get('/cars');
+        setCars(result.data);
+      } catch(error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchCars();
+  }, []);
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', () => {
+      return true;
+    })
+  }, []);
+
   return (
     <Container>
       <StatusBar 
@@ -108,25 +114,26 @@ export default function Home(): ReactElement {
         translucent
       />
 
+      <Header>
+        <HeaderContent>
+          <Logo width={RFValue(108)} height={RFValue(12)} />
+          {
+            !isLoading && (
+              <TotalCards>{`Total de ${cars.length} carros`}</TotalCards>
+            )
+          }          
+        </HeaderContent>
+      </Header>
+
       {
         isLoading ? (
           <Load />
         ) : (
-          <>
-            <Header>
-              <HeaderContent>
-                <Logo width={RFValue(108)} height={RFValue(12)} />
-
-                <TotalCards>{`Total de ${cars.length} carros`}</TotalCards>
-              </HeaderContent>
-            </Header>
-
-            <CarList 
-              data={cars} 
-              keyExtractor={item => item.id}
-              renderItem={({ item }) => (<Car onPress={() => handleCarDetails(item)} data={item} />)}
-            />
-          </>
+          <CarList 
+            data={cars} 
+            keyExtractor={item => item.id}
+            renderItem={({ item }) => (<Car onPress={() => handleCarDetails(item)} data={item} />)}
+          />
         )
       }
 
