@@ -143,10 +143,6 @@ export default function CarDetails(): ReactElement {
 
         <About>
           {car.about}
-          {car.about}
-          {car.about}
-          {car.about}
-          {car.about}
         </About>
       </Animated.ScrollView>
 
