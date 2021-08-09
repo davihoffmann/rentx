@@ -2,6 +2,7 @@ import React, { ReactElement } from 'react';
 import { StatusBar } from 'react-native';
 import { useTheme } from 'styled-components';
 
+import Input from '../../components/Input';
 import Button from '../../components/Button';
 
 import { 
@@ -9,6 +10,7 @@ import {
   Header,
   Title,
   SubTitle,
+  Form,
   Footer
  } from './styles';
 
@@ -24,7 +26,7 @@ export default function SignIn(): ReactElement {
       />
       <Header>
         <Title>
-          Estamois {'\n'} 
+          Estamos {'\n'} 
           quase lá
         </Title>
 
@@ -33,6 +35,11 @@ export default function SignIn(): ReactElement {
           uma experiência incrível
         </SubTitle>
       </Header>
+
+      <Form>
+        <Input iconName="mail" />
+        
+      </Form>
 
       <Footer>
         <Button 
