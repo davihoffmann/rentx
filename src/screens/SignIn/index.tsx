@@ -21,12 +21,18 @@ import {
   Form,
   Footer
  } from './styles';
+import { useNavigation, CommonActions } from '@react-navigation/native';
 
 export default function SignIn(): ReactElement {
   const theme = useTheme();
+  const navigation = useNavigation();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  function hanldeNewAccount() {
+    navigation.dispatch(CommonActions.navigate('SignUpFirstStep'))
+  }
 
   async function handleSignIn() {
     try {
@@ -102,8 +108,8 @@ export default function SignIn(): ReactElement {
             <Button 
               title="Criar conta gratuita"
               color={theme.colors.background_secondary}
-              onPress={() => {}}
-              enabled={false}
+              onPress={hanldeNewAccount}
+              enabled={true}
               loading={false}
               light
             />

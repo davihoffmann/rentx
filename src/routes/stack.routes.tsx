@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Splash from '../screens/Splash';
 import SignIn from '../screens/SignIn';
+import SignUpFirstStep from '../screens/SignUp/SignUpFirstStep';
 import Home from '../screens/Home';
 import MyCars from '../screens/MyCars';
 import CarDetails from '../screens/CarDetails';
@@ -17,6 +18,7 @@ export default function StackRoutes() {
     <Navigator screenOptions={{ headerShown: false }} initialRouteName="Splash">
       {/* <Screen name="Splash" component={Splash} /> */}
       <Screen name="SignIn" component={SignIn} />
+      <Screen name="SignUpFirstStep" component={SignUpFirstStep} />
       <Screen name="Home" component={Home} options={{
         gestureEnabled: false
       }} />
