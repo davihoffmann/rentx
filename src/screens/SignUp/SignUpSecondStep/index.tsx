@@ -47,6 +47,14 @@ export default function SignUpSecondStep(): ReactElement {
       Alert.alert('As senha não são iguais');
       return;
     }
+
+    // enviar para api;
+    navigation.dispatch(CommonActions.navigate('Confirmation', { 
+      title: 'Conta Criada', 
+      message: 'Agora é so fazer login \n e aproveitar', 
+      nextScreenRoute: 'SignIn'
+    }));
+
   }
 
   function handleBack() {

@@ -94,9 +94,11 @@ export default function SchedulingDetails(): ReactElement {
       id: car.id,
       unavailable_dates
     }).then(() => 
-      navigation.dispatch(
-        CommonActions.navigate('SchedulingComplete')
-      )
+      navigation.dispatch(CommonActions.navigate('Confirmation', { 
+        title: 'Carro alugado!', 
+        message: 'Agora você so precisa ir\naté a concessionária da RENTX\npegar seu automóvel', 
+        nextScreenRoute: 'Home'
+      }))
     )
     .catch(error => {
       console.error(error);
