@@ -8,6 +8,8 @@ import {
 import { useNavigation, CommonActions, useRoute } from '@react-navigation/native';
 import { useTheme } from 'styled-components';
 
+import api from '../../../services/api';
+
 import BackButton from '../../../components/BackButton';
 import Bullet from '../../../components/Bullet';
 import PasswordInput from '../../../components/PasswordInput';
@@ -23,6 +25,7 @@ import {
   FormTitle
 } from './styles';
 
+
 interface Params {
   user: {name: string, email: string, driverLicense: string}
 }
@@ -37,7 +40,7 @@ export default function SignUpSecondStep(): ReactElement {
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
 
-  function handleRegister() {
+  async function handleRegister() {
     if(!password || !passwordConfirm) {
       Alert.alert('Informe a senha e a confirmação de senha');
       return;
@@ -48,13 +51,23 @@ export default function SignUpSecondStep(): ReactElement {
       return;
     }
 
-    // enviar para api;
-    navigation.dispatch(CommonActions.navigate('Confirmation', { 
-      title: 'Conta Criada', 
-      message: 'Agora é so fazer login \n e aproveitar', 
-      nextScreenRoute: 'SignIn'
-    }));
-
+    await api.post('/users', {
+      name: user.name,
+      email: user.email,
+      driver_license: user.driverLicense,
+      password
+    })
+    .then(() => {
+      navigation.dispatch(CommonActions.navigate('Confirmation', { 
+        title: 'Conta Criada', 
+        message: 'Agora é so fazer login \n e aproveitar', 
+        nextScreenRoute: 'SignIn'
+      }));
+    })
+    .catch((error) => {
+      console.log(error);
+      Alert.alert('Opa', 'Não foi possível cadastrar')
+    });
   }
 
   function handleBack() {
