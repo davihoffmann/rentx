@@ -1,21 +1,19 @@
 
 import React, { ReactElement, useEffect, useState } from 'react';
-import { StatusBar, StyleSheet, BackHandler } from 'react-native';
+import { StatusBar, StyleSheet } from 'react-native';
 import { useNavigation, CommonActions } from '@react-navigation/native';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { Ionicons } from '@expo/vector-icons';
-import { useTheme } from 'styled-components';
-import { RectButton, PanGestureHandler } from 'react-native-gesture-handler';
+// import { useTheme } from 'styled-components';
+// import { RectButton } from 'react-native-gesture-handler';
 
-import Animated, { 
-  useSharedValue, 
-  useAnimatedStyle, 
-  useAnimatedGestureHandler,
-  withSpring
-} from 'react-native-reanimated';
+// import Animated, { 
+//   useSharedValue, 
+//   useAnimatedStyle, 
+//   useAnimatedGestureHandler,
+//   withSpring
+// } from 'react-native-reanimated';
 
 import Car from '../../components/Car';
-import Load from '../../components/Load';
 import LoadAnimation from '../../components/LoadAnimation';
 
 import api from '../../services/api';
@@ -31,41 +29,41 @@ import {
    CarList,
 } from './styles';
 
-const ButtonAnimated = Animated.createAnimatedComponent(RectButton);
+// const ButtonAnimated = Animated.createAnimatedComponent(RectButton);
  
 export default function Home(): ReactElement {
   const navigation = useNavigation();
-  const theme = useTheme();
+  // const theme = useTheme();
 
   const [cars, setCars] = useState<CarDTO[]>([]);
   const [isLoading, setLoading] = useState(true);
 
-  const positionY = useSharedValue(0);
-  const positionX = useSharedValue(0);
+  // const positionY = useSharedValue(0);
+  // const positionX = useSharedValue(0);
 
-  const myCarsButtonStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        { translateX: positionX.value },
-        { translateY: positionY.value }
-      ]
-    };
-  });
+  // const myCarsButtonStyle = useAnimatedStyle(() => {
+  //   return {
+  //     transform: [
+  //       { translateX: positionX.value },
+  //       { translateY: positionY.value }
+  //     ]
+  //   };
+  // });
 
-  const onGestureEvent = useAnimatedGestureHandler({
-    onStart(_, ctx: any) {
-      ctx.positionX = positionX.value;
-      ctx.positionY = positionY.value;
-    },
-    onActive(event, ctx: any) {
-      positionX.value = ctx.positionX + event.translationX;
-      positionY.value = ctx.positionY + event.translationY;
-    },
-    onEnd() {
-      positionX.value = withSpring(0);
-      positionY.value = withSpring(0);
-    }
-  });
+  // const onGestureEvent = useAnimatedGestureHandler({
+  //   onStart(_, ctx: any) {
+  //     ctx.positionX = positionX.value;
+  //     ctx.positionY = positionY.value;
+  //   },
+  //   onActive(event, ctx: any) {
+  //     positionX.value = ctx.positionX + event.translationX;
+  //     positionY.value = ctx.positionY + event.translationY;
+  //   },
+  //   onEnd() {
+  //     positionX.value = withSpring(0);
+  //     positionY.value = withSpring(0);
+  //   }
+  // });
 
   function handleCarDetails(car: CarDTO) {
     navigation.dispatch(
@@ -78,13 +76,13 @@ export default function Home(): ReactElement {
     );
   }
 
-  function handleMyCars() {
-    navigation.dispatch(
-      CommonActions.navigate({
-        name: 'MyCars'
-      })
-    );
-  }
+  // function handleMyCars() {
+  //   navigation.dispatch(
+  //     CommonActions.navigate({
+  //       name: 'MyCars'
+  //     })
+  //   );
+  // }
 
   useEffect(() => {
     async function fetchCars() {
@@ -99,12 +97,6 @@ export default function Home(): ReactElement {
     }
 
     fetchCars();
-  }, []);
-
-  useEffect(() => {
-    BackHandler.addEventListener('hardwareBackPress', () => {
-      return true;
-    })
   }, []);
 
   return (
@@ -138,7 +130,7 @@ export default function Home(): ReactElement {
         )
       }
 
-      <PanGestureHandler onGestureEvent={onGestureEvent}>
+      {/* <PanGestureHandler onGestureEvent={onGestureEvent}>
         <Animated.View
           style={[
             myCarsButtonStyle,
@@ -160,7 +152,7 @@ export default function Home(): ReactElement {
             />
           </ButtonAnimated>
         </Animated.View>
-      </PanGestureHandler>
+      </PanGestureHandler> */}
     </Container>
   );
 }

@@ -47,8 +47,7 @@ export default function SignIn(): ReactElement {
       });
   
       await schema.validate({email, password});
-      Alert.alert('Tudo certo!');
-
+      
       await signIn({ email, password });
     } catch(error) {
       if(error instanceof Yup.ValidationError) {

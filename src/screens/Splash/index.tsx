@@ -22,7 +22,7 @@ export default function Splash(): ReactElement {
 
   function startApp() {
     navigation.dispatch(
-      CommonActions.navigate('Home')
+      CommonActions.navigate('SignIn')
     );
   }
 
