@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useState, useEffect } from 'react';
 import { 
   StatusBar,
   KeyboardAvoidingView, 
@@ -8,6 +8,8 @@ import {
  } from 'react-native';
  import * as Yup from 'yup';
 import { useTheme } from 'styled-components';
+import { useNavigation, CommonActions } from '@react-navigation/native';
+
 import { useAuth } from '../../hooks/auth';
 
 import Input from '../../components/Input';
@@ -22,8 +24,6 @@ import {
   Form,
   Footer
  } from './styles';
-import { useNavigation, CommonActions } from '@react-navigation/native';
-
 
 export default function SignIn(): ReactElement {
   const { signIn } = useAuth();
