@@ -85,18 +85,27 @@ export default function Home(): ReactElement {
   // }
 
   useEffect(() => {
+    let isMounted = true;
+
     async function fetchCars() {
       try {
         const result = await api.get('/cars');
-        setCars(result.data);
+        if(isMounted) {
+          setCars(result.data);
+        }
       } catch(error) {
         console.error(error);
       } finally {
-        setLoading(false);
+        if(isMounted) {
+          setLoading(false);
+        }
       }
     }
 
     fetchCars();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return (
