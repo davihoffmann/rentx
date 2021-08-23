@@ -39,15 +39,6 @@ export default function AppTabRoutes() {
             <HomeSvg fill={color} width={24} height={24} />
           ))
         }}
-       />
-      <Screen 
-        name="Profile" 
-        component={Profile}
-        options={{
-          tabBarIcon: (({ color }) => (
-            <PeopleSvg fill={color} width={24} height={24} />
-          ))
-        }}
       />
       <Screen 
         name="MyCars" 
@@ -55,6 +46,15 @@ export default function AppTabRoutes() {
         options={{
           tabBarIcon: (({ color }) => (
             <CarSvg fill={color} width={24} height={24} />
+          ))
+        }}
+      />
+      <Screen 
+        name="Profile" 
+        component={Profile}
+        options={{
+          tabBarIcon: (({ color }) => (
+            <PeopleSvg fill={color} width={24} height={24} />
           ))
         }}
       />
