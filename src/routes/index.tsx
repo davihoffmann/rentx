@@ -7,9 +7,10 @@ import AuthRoutes from './auth.routes';
 
 export default function Routes(): ReactElement {
   const { user } = useAuth();
+  
   return (
     <NavigationContainer>
-      {user ? <AppTabRoutes /> :  <AuthRoutes />}
+      {user.id ? <AppTabRoutes /> :  <AuthRoutes />}
     </NavigationContainer>
   );
 }

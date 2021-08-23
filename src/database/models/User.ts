@@ -5,7 +5,7 @@ class User extends Model {
   static table = 'users';
 
   @field('user_id')
-  user_Id!: string;
+  user_id!: string;
 
   @field('name')
   name!: string;
