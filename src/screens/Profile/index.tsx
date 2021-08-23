@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from 'styled-components';
 import { Feather } from '@expo/vector-icons';
@@ -14,11 +14,17 @@ import {
   PhotoContainer,
   PhotoButton,
   Photo,
+  Content,
+  Options,
+  Option,
+  OptionTitle
  } from './styles';
 
 export default function Profile(): ReactElement {
   const theme = useTheme();
   const navigation = useNavigation();
+
+  const [option, setOption] = useState<'dataEdit' | 'passwordEdit'>('dataEdit');
 
   function handleBack() {
     navigation.goBack()
@@ -26,6 +32,10 @@ export default function Profile(): ReactElement {
 
   function handleSignOut() {
 
+  }
+
+  function handleOptionChange(optionSelected: 'dataEdit' | 'passwordEdit') {
+    setOption(optionSelected);
   }
 
   return (
@@ -47,6 +57,18 @@ export default function Profile(): ReactElement {
           </PhotoButton>
         </PhotoContainer>
       </Header>
+    
+      <Content>
+        <Options>
+          <Option active={option === 'dataEdit'} onPress={() => handleOptionChange('dataEdit')}>
+            <OptionTitle active={option === 'dataEdit'}>Dados</OptionTitle>
+          </Option>
+
+          <Option active={option === 'passwordEdit'} onPress={() => handleOptionChange('passwordEdit')}>
+            <OptionTitle  active={option === 'passwordEdit'}>Trocar senha</OptionTitle>
+          </Option>
+        </Options>
+      </Content>
     </Container>
   );
 }
