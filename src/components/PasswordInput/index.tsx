@@ -50,6 +50,7 @@ export default function PasswordInput({
         isFocused={isFocused}
         {...rest}
         secureTextEntry={!showPassword}
+        autoCorrect={false}
       />
 
       <ChangePasswordVisibilityButton onPress={handlePasswordVisibilityChange}>
