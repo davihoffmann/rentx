@@ -5,12 +5,17 @@ import { useAuth } from '../hooks/auth';
 import AppTabRoutes from './app.tab.routes';
 import AuthRoutes from './auth.routes';
 
+import LoadAnimation from '../components/LoadAnimation';
+
 export default function Routes(): ReactElement {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   
   return (
-    <NavigationContainer>
-      {user.id ? <AppTabRoutes /> :  <AuthRoutes />}
-    </NavigationContainer>
+    loading ? <LoadAnimation /> :
+    (
+      <NavigationContainer>
+        {user.id ? <AppTabRoutes /> :  <AuthRoutes />}
+      </NavigationContainer>
+    )
   );
 }
