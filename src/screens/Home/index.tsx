@@ -49,13 +49,7 @@ export default function Home(): ReactElement {
       database,
       pullChanges: async ({ lastPulledAt }) => {
         const response = await api.get(`cars/sync/pull?lastPulledVersion=${lastPulledAt || 0}`);
-
         const { changes, latestVersion } = response.data;
-
-        console.log('## sincronização ##');
-        console.log(changes);
-        console.log(latestVersion);
-
         return { changes, timestamp: latestVersion };
       },
       pushChanges: async ({ changes }) => {
@@ -92,7 +86,7 @@ export default function Home(): ReactElement {
   }, []);
 
   useEffect(() => {
-    if(netInfo.isConnected) {
+    if(netInfo.isConnected === true) {
       offlineSynchronize();
     }
   }, [netInfo.isConnected]);
