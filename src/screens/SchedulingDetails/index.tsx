@@ -92,7 +92,7 @@ export default function SchedulingDetails(): ReactElement {
       navigation.dispatch(CommonActions.navigate('Confirmation', { 
         title: 'Carro alugado!', 
         message: 'Agora você so precisa ir\naté a concessionária da RENTX\npegar seu automóvel', 
-        nextScreenRoute: 'Home'
+        nextScreenRoute: 'HomeStack'
       }))
     ).catch(error => {
       console.error(error);

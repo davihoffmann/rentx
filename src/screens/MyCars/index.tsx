@@ -3,11 +3,13 @@ import { FlatList, StatusBar } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/core';
 import { useTheme } from 'styled-components';
+import { format, parseISO } from 'date-fns';
 
 import BackButton from '../../components/BackButton';
 
 import api from '../../services/api';
 import { CarDTO } from '../../dtos/CarDTO';
+import { Car as ModelCar } from '../../database/models/Car';
 
 import { 
   Container, 
@@ -35,18 +37,33 @@ interface CarProps {
   endDate: string;
 }
 
+interface DataProps {
+  id: string;
+  car: ModelCar;
+  start_date: string;
+  end_date: string;
+}
+
 export default function MyCars(): ReactElement {
   const navigation = useNavigation()
   const theme = useTheme();
 
-  const [cars, setCars] = useState<CarProps[]>([]);
+  const [cars, setCars] = useState<DataProps[]>([]);
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchCars() {
       try {
-        const result = await api.get('/schedules_byuser?user_id=1');
-        setCars(result.data);
+        const result = await api.get('/rentals');
+        const dataFormatted = result.data.map((data: DataProps) => {
+          return {
+            id: data.id,
+            car: data.car,
+            start_date: format(parseISO(data.start_date), 'dd/MM/yyyy'),
+            end_date: format(parseISO(data.end_date), 'dd/MM/yyyy')
+          }
+        })
+        setCars(dataFormatted);
       } catch(error) {
         console.error(error);
       } finally {
@@ -94,7 +111,7 @@ export default function MyCars(): ReactElement {
                   <CarFooter>
                     <CarFooterTitle>Período</CarFooterTitle>
                     <CarFooterPeriod>
-                      <CarFooterDate>{item.startDate}</CarFooterDate>
+                      <CarFooterDate>{item.start_date}</CarFooterDate>
                       
                       <AntDesign 
                         name="arrowright" 
@@ -103,7 +120,7 @@ export default function MyCars(): ReactElement {
                         style={{ marginHorizontal: 10 }}
                       />
                       
-                      <CarFooterDate>{item.endDate}</CarFooterDate>
+                      <CarFooterDate>{item.end_date}</CarFooterDate>
                     </CarFooterPeriod>
                   </CarFooter>
                 </CarWrapper>
