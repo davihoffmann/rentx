@@ -1,14 +1,13 @@
 import React, { ReactElement, useState, useEffect } from 'react';
 import { FlatList, StatusBar } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation, useIsFocused } from '@react-navigation/core';
 import { useTheme } from 'styled-components';
 import { format, parseISO } from 'date-fns';
 
 import BackButton from '../../components/BackButton';
 
 import api from '../../services/api';
-import { CarDTO } from '../../dtos/CarDTO';
 import { Car as ModelCar } from '../../database/models/Car';
 
 import { 
@@ -29,14 +28,6 @@ import {
 import Car from '../../components/Car';
 import Load from '../../components/Load';
 
-interface CarProps {
-  id: number;
-  user_id: number;
-  car: CarDTO;
-  startDate: string;
-  endDate: string;
-}
-
 interface DataProps {
   id: string;
   car: ModelCar;
@@ -45,7 +36,8 @@ interface DataProps {
 }
 
 export default function MyCars(): ReactElement {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
+  const screenIsFocus = useIsFocused();
   const theme = useTheme();
 
   const [cars, setCars] = useState<DataProps[]>([]);
@@ -72,7 +64,7 @@ export default function MyCars(): ReactElement {
     }
 
     fetchCars();
-  }, []);
+  }, [screenIsFocus]);
 
   return (
     <Container>
