@@ -102,7 +102,7 @@ export default function CarDetails(): ReactElement {
     if(netInfo.isConnected === true) {
       fetchCarUpdated();
     }
-  }, [netInfo.isConnected])
+  }, [netInfo.isConnected]);
 
   return (
     <Container>

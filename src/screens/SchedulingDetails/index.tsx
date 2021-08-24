@@ -4,6 +4,7 @@ import { useNavigation, CommonActions, useRoute } from '@react-navigation/native
 import { RFValue } from 'react-native-responsive-fontsize';
 import { Feather } from '@expo/vector-icons';
 import { useTheme } from 'styled-components';
+import { useNetInfo } from '@react-native-community/netinfo';
 import { format } from 'date-fns';
 
 import api from '../../services/api';
@@ -44,6 +45,7 @@ import {
   Footer
 } from './styles';
 
+
 interface Params {
   car: CarDTO;
   dates: string[];
@@ -60,9 +62,12 @@ export default function SchedulingDetails(): ReactElement {
   const route = useRoute();
   const { car, dates } = route.params as Params;
 
+  const netInfo = useNetInfo();
+
+  const [ carUpdated, setCarUpdated ] = useState<CarDTO>({} as CarDTO);
   const [isLoading, setIsLoading] = useState(false);
   const [rentalPeriod, setRentalPeriod] = useState<RentalPeriod>({} as RentalPeriod);
-  const rentTotal = (Number(dates.length) * car.rent.price).toLocaleString('pt-BR', {
+  const rentTotal = (Number(dates.length) * car.price).toLocaleString('pt-BR', {
     style: 'currency',
     currency: 'BRL'
   });
@@ -76,36 +81,36 @@ export default function SchedulingDetails(): ReactElement {
 
   async function handleConfirm() {
     setIsLoading(true);
-    const schedulesByCar = await api.get(`/schedules_bycars/${car.id}`);
-
-    const unavailable_dates = [
-      ...schedulesByCar.data.unavailable_dates,
-      ...dates
-    ];
-
-    await api.post('/schedules_byuser', {
+    
+    await api.post('/rentals', {
       user_id: 1,
-      car,
-      startDate: format(getPlatformDate(new Date(dates[0])), 'dd/MM/yyyy'),
-      endDate: format(getPlatformDate(new Date(dates[dates.length - 1])), 'dd/MM/yyyy')
-    })
-
-    api.put(`/schedules_bycars/${car.id}`, {
-      id: car.id,
-      unavailable_dates
+      car_id: car.id,
+      start_date: new Date(dates[0]), //format(getPlatformDate(new Date(dates[0])), 'dd/MM/yyyy'),
+      end_date: new Date(dates[dates.length - 1]), // format(getPlatformDate(new Date(dates[dates.length - 1])), 'dd/MM/yyyy')
+      total: rentTotal
     }).then(() => 
       navigation.dispatch(CommonActions.navigate('Confirmation', { 
         title: 'Carro alugado!', 
         message: 'Agora você so precisa ir\naté a concessionária da RENTX\npegar seu automóvel', 
         nextScreenRoute: 'Home'
       }))
-    )
-    .catch(error => {
+    ).catch(error => {
       console.error(error);
       setIsLoading(false);
       Alert.alert('Não foi possível confirmar o agendamento.');
-    })
+    });
   }
+
+  useEffect(() => {
+    async function fetchCarUpdated() {
+      const response = await api.get(`/cars/${car.id}`);
+      setCarUpdated(response.data);
+    }
+
+    if(netInfo.isConnected === true) {
+      fetchCarUpdated();
+    }
+  }, [netInfo.isConnected]);
 
   return (
     <Container>
@@ -114,9 +119,9 @@ export default function SchedulingDetails(): ReactElement {
       </Header>
 
       <CarImages>
-        <ImageSlider 
-          imageUrl={car.photos} 
-        />
+        <ImageSlider imageUrl={
+          !!carUpdated.photos ? carUpdated.photos : [{id: car.thumbnail, photo: car.thumbnail}]
+        } />
       </CarImages>
 
       <Content>
@@ -127,18 +132,22 @@ export default function SchedulingDetails(): ReactElement {
           </Description>
 
           <Rent>
-            <Period>{car.rent.period}</Period>
-            <Price>{`R$ ${car.rent.price}`}</Price>
+            <Period>{car.period}</Period>
+            <Price>{`R$ ${car.price}`}</Price>
           </Rent>
         </Details>
 
-        <Acessories>
         {
-            car.accessories.map(accessory => (
-              <Accessory key={accessory.type} name={accessory.name} icon={getAcessoryIcon(accessory.type)} />
-            ))
-          }
-        </Acessories>
+          carUpdated.accessories && (
+            <Acessories>
+              {
+                carUpdated.accessories.map(accessory => (
+                  <Accessory key={accessory.type} name={accessory.name} icon={getAcessoryIcon(accessory.type)} />
+                ))
+              }
+            </Acessories>
+          )
+        }
 
         <RentalPeriod>
           <CalendarIcon>
@@ -169,7 +178,7 @@ export default function SchedulingDetails(): ReactElement {
         <RentalPrice>
           <RentalPriceLabel>TOTAL</RentalPriceLabel>
           <RentalPriceDetails>
-            <RentalPriceQuota>{`R$ ${car.rent.price} x${dates.length} diárias`}</RentalPriceQuota>
+            <RentalPriceQuota>{`R$ ${car.price} x${dates.length} diárias`}</RentalPriceQuota>
             <RentalPriceTotal>{rentTotal}</RentalPriceTotal>
           </RentalPriceDetails>
         </RentalPrice>
